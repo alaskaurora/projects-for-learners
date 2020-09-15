@@ -1,0 +1,417 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include<conio.h>
+#include <windows.h>
+
+# define Esc 27
+# define LEN sizeof(struct student)
+struct student{
+	char name[20];
+	int classes;
+	int num ;
+	int score;
+	struct student *next;
+};// define a struct of student
+int n = 0 ;
+// create functions
+struct student *create();
+struct student *insert(struct student *head);
+void bubblesort(struct student *head);
+void insertsort(struct student *head);
+void getpoint(struct student *head, int i);
+void change(struct student *head);
+void deleted(struct student *head);
+int getlist(struct student *head, int i);
+void search(struct student *head);
+void writefile(struct student *head ,int *len);
+void readfile(struct student *head , int *len);
+void save(struct student *head , int *len);
+void output(struct student *head);
+void menu();
+void goon();
+
+// menu of this system
+void menu(){
+	printf("\n\n\t\t --------------------------------------------------");
+	printf("\n\n\t\t       welcome to the grade point system");
+	printf("\n\n\t\t ----------------------------------------------------");
+	printf("\n\n\t\t         1.create a form of studnet's grade");
+	printf("\n\n\t\t         2.sort based on score                                 ");
+	printf("\n\n\t\t         3.sort based on num                                    ");
+	printf("\n\n\t\t         4.find                                     " );
+	printf("\n\n\t\t         5.delete                                       ");
+	printf("\n\n\t\t         6.change                                      ");
+	printf("\n\n\t\t         7.add                                       ");
+	printf("\n\n\t\t         8. write                                       ");
+	printf("\n\n\t\t         9. read                              ");
+	printf("\n\n\t\t         10.sava                                    ");
+	printf("\n\n\t\t         ESC.quit this system                                       " );
+	printf("\n\n\t\t  ---------------------------------------------------------------                                ");
+	printf("\n\n\t\t  print your selection(1~10)                                                  ");
+}
+struct student *create(){
+	struct student *head ,*tail , *node;
+	head = (struct student *)malloc(sizeof(LEN));
+	tail = head ; 
+	int n ;
+	printf("please enter the number n of students\n");
+	scanf("%d",&n);
+	for( int i = 0 ; i < n ; i++){
+		node = (struct student *)malloc(sizeof(LEN));
+		printf("please enter the name of students\n");
+		scanf("%s",node->name);
+		printf("please enter the classes of students\n");
+		scanf("%d",&node->classes);
+		printf("please enter the num of students\n");
+		scanf("%d",&node->num);
+       printf("please enter the score of students\n");
+		scanf("%d",&node->score);
+		tail ->next = node ;
+		tail = node;
+	}
+	tail ->next = NULL;
+	return head;
+}
+void deleted(struct student *head){
+	int i = 1 ,s;
+	printf("please enter which student do you want to delete\n");
+	scanf("%d", &s);
+	struct student *p ,*q;
+	p = head;
+	while(i < s && p != NULL){
+		q = p;
+		p = p->next;
+		i++;
+	}
+	if( p != NULL){
+		q ->next = p-> next;
+		free(p);
+	}
+	else{
+		printf("节点不存在\n");
+	}
+}
+void change(struct student *head){
+	int i ,s;
+	printf("please enter which student's information do you want to change\n");
+	scanf("%d",s);
+	struct student *p =head;
+	for(i = 0 ; i < s;i++){
+		p =p->next;
+	}
+	if( p != NULL){
+		printf("please change the name\n");
+		scanf("%s",p->name);
+		printf("please change the classes\n");
+		scanf("%d",&p->classes);
+		printf("please change the num\n");
+		scanf("%d",&p->num);
+		printf("please change the score\n");
+		scanf("%d",&p->score);
+
+	}
+	else{
+		printf("node doesn't exist\n");
+	}
+	
+
+}
+struct student *insert(struct student *head){
+	int i;
+	struct student *p,*node;
+	p = head;
+	for(i = 0;i < n ; i++){
+		p = p->next;
+	}
+	if( p != NULL){
+		node = (struct student *)malloc(sizeof(LEN));
+		printf("please change the name\n");
+		scanf("%s",node->name);
+		printf("please change the classes\n");
+		scanf("%d",&node->classes);
+		printf("please change the num\n");
+		scanf("%d",&node->num);
+		printf("please change the score\n");
+		scanf("%d",&node->score);
+        node->next = p->next;
+		p->next = node;
+	}
+	else{
+		printf("node doesn't exist");
+	}
+	return head;
+}
+void bubblesort(struct student *head){
+	struct student * p;
+	p = head->next;
+	int i;
+	for(i = 1; i < n;i++){
+		while(p != NULL){
+		if(p->num > p->next->num){
+			int t1,t2;
+			t1 = p->num;
+			p->num = p->next->num;
+			p->next->num = t1;
+			t2 = p->score;
+			p->score = p->next->score;
+			p->next->score = t2;
+		}
+		p =p->next;
+	}
+	p = head ->next;
+	}
+}
+void insertsort(struct student *head){
+	struct student *node,*p,*l1,*l2;
+	l1 = head->next;
+	node = l1->next;
+	l1 ->next = NULL;
+	while(node){
+		l2 = node ;
+		node = node->next;
+		p = head ;
+		l1 = head->next;
+		while(l1 != NULL && l1->score <l2->score){
+			p = l1;
+			l1 =l1->next;
+		}
+		l2->next = l1;
+		p->next = l2;
+	}
+
+}
+int getlist(struct student *head, int i){
+	int j;
+	struct student *p;
+	p = head;
+	for(j = 0 ; j < i ;j++){
+		p =p->next;
+	}
+	if(p != NULL){
+		return p->num;
+	}
+}
+void getpoint(struct student *head, int i){
+	int j;
+	struct student *p = head;
+	for(j = 0 ;j < n;j++){
+		p = p->next;
+	}
+	if( p != NULL){
+		printf("\nname\nnum\n score");
+		printf("%s",p->name);
+		printf("%d",&p->num);
+		printf("%d",&p->score);
+	}
+}
+void search(struct student *head){
+	int low = 1,high = n,mid = 0,key;
+	printf("please enter which student do you want to fing\n");
+	scanf("%d",&n);
+	while(low <= high){
+		mid = (low +high)/2;
+		if(key == getlist(head,mid)){
+			getpoint(head,mid);
+			break;
+		}
+		if(key < getlist(head,mid))
+		   high = mid -1;
+		if(key >getlist(head,mid))
+		   low = mid + 1;
+
+	}
+}
+void output(struct student *head){
+	struct student *p =head ->next;
+	 printf("\n\n\n****************德育学分信息表****************\n\n");
+    printf("\n\t现在有%d个记录是:\n", n);
+    printf("\n姓名\t班号\t学号\t\t德育学分\n");
+	if( p != NULL){
+		if (p != NULL)
+    {
+        do
+        {
+
+            printf("%s", p->name);
+            printf("\t%d\t", p->classes);
+            printf("%d", p->num);
+            printf("\t%d\n", p->score);
+            p = p->next;
+        } while (p != NULL);
+    }
+	}
+}
+void goon(){
+	printf("press any button to continue\n");
+	getch();
+}
+void writefile(struct student *head ,int *len){
+	FILE *q;
+	struct student *p = head ->next;
+	if((q = fopen("a.txt","wb")) == NULL ){
+		printf("fail to open file a.txt,press anything to continue");
+		getchar();
+		exit(0);
+	}
+	else
+	{
+		for(int i = 0 ; i <*len ;i++){
+			fprintf(q,"%s,%d,%d,%d",*p->name,p->classes,p->num,p->score);
+			p = p->next;
+		}
+	}
+	fclose(q);
+}
+void readfile(struct student *head , int *len){
+	  FILE* fp;
+    struct student dd;
+    int flag = 1;
+    struct student* p = head;
+    if ((fp = fopen("学生信息.txt", "rb")) == NULL)
+    {
+        printf("\t\t打开文件失败！按任意键结束。\n");
+        getchar();
+        exit(0);
+    }
+    else
+    {
+        *len = 0;
+        while (!feof(fp)) {
+            fscanf(fp, "%s%s%f%f%f%f%d", dd.name, dd.classes, dd.num, &dd.score);
+            head[*len] = dd;
+            *len += 1;
+        }
+
+    }
+    fclose(fp);
+}
+void save(struct student *head , int *len){
+	char a[10];
+	printf("is it ok?");
+	fflush(stdin);
+	gets(a);
+	if(strcmp(a,"yes") == 0){
+		writefile(head , len);
+		printf("load completed");
+	}
+	else{
+		printf("load failed");
+	}
+	  
+}
+int main(){
+	char arr[20] = {0};
+	int i;
+    for( i = 0; i <= 2 ; i++){
+		printf("————————————\n");
+        printf("请输入密码：\n");
+        printf("————————————\n");
+        scanf("%s", arr);
+	
+	if (strcmp(arr, "123123") == 0)
+        {
+            printf("密码正确，登录成功\n");
+            printf("\n\n\t\t\t	    *欢迎使用德育学分管理系统*     ");
+            break;
+        }
+	
+	 else
+        {
+            printf("输入错误，请重新输入：\n");
+        }
+    }
+
+    if (i == 3)
+    {
+        printf("三次密码输入错误，登录失败\n");
+    }
+    system("pause");
+	struct student *head;
+	char ckey = 'a';
+	int istate = 0;
+	do
+    {
+        system("cls");
+        menu();
+        ckey = getch();
+
+        if (ckey == '1')
+        {
+            if (head != NULL)
+            {
+                head = NULL;
+                n = 0;
+            }
+
+            system("cls");
+            head = create();
+            output(head);
+            istate = 1;
+            goon();
+        }
+
+        else if ((istate == 0) && (ckey != Esc))
+        {
+            printf("\n\t错误：你必须先输入学生信息！！！");
+            goon();
+        }
+
+        else if (ckey == '2')
+        {
+            system("cls");
+            bubblesort(head);
+            output(head);
+            goon();
+        }
+
+        else if (ckey == '3')
+        {
+            system("cls");
+            insertsort(head);
+            output(head);
+            goon();
+        }
+
+        else if (ckey == '4')
+        {
+            system("cls");
+            bubblesort(head);
+            search(head);
+            //output(head);
+            goon();
+        }
+
+        else if (ckey == '5')
+        {
+            system("cls");
+            delete(head);
+            output(head);
+            goon();
+        }
+
+        else if (ckey == '6')
+        {
+            system("cls");
+            change(head);
+            bubblesort(head);
+            output(head);
+            goon();
+        }
+
+        else if (ckey == '7')
+        {
+            system("cls");
+            insert(head);
+            bubblesort(head);
+            output(head);
+            goon();
+        }
+
+    }
+
+    while (ckey != Esc);
+
+    exit(0);
+}
+
